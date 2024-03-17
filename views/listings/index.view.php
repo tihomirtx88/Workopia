@@ -1,8 +1,7 @@
+
 <?php require basePath('views/partials/head.php'); ?>
 <?php require basePath('views/partials/navbar.php'); ?>
-<?php require basePath('views/partials/showcase-search.php'); ?>
 <?php require basePath('views/partials/top-banner.php'); ?>
-
 
 <!-- Job Listings -->
 <section>
@@ -34,14 +33,11 @@
           </div>
         </div>
       <?php endforeach; ?>
+
     </div>
-    <a href="/Workopia/listings" class="block text-xl text-center">
-      <i class="fa fa-arrow-alt-circle-right"></i>
-      Show All Jobs
-    </a>
 </section>
 
 <?php require basePath('views/partials/bottom-banner.php'); ?>
->
+
 
 <?php require basePath('views/partials/footer.php'); ?>
