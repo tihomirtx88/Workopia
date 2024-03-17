@@ -46,6 +46,18 @@ function loadPartial($name)
     }
 }
 
+function loadListngs($name)
+{
+
+    $partialPath = basePath("views/partials/{$name}.php");
+
+    if (file_exists($partialPath)) {
+        require $partialPath;
+    } else {
+        echo "Partial '{$name} not found!'";
+    }
+}
+
 /**
  * Inspect value(s)
  * 
