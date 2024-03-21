@@ -3,6 +3,10 @@
 <?php require basePath('views/partials/showcase-search.php'); ?>
 <?php require basePath('views/partials/top-banner.php'); ?>
 
+<?php 
+
+?>
+
 
 <!-- Job Listings -->
 <section>
@@ -28,7 +32,8 @@
                 <span>Coding</span>
               </li>
             </ul>
-            <a href="/Workopia/listings/<?= $listing->id ?>" class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
+            <a href="/Workopia/listing?id=<?= $listing->id ?>" 
+                class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
               Details
             </a>
           </div>
@@ -42,6 +47,6 @@
 </section>
 
 <?php require basePath('views/partials/bottom-banner.php'); ?>
->
+
 
 <?php require basePath('views/partials/footer.php'); ?>
