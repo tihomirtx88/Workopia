@@ -1,11 +1,15 @@
 <?php 
+require __DIR__ . './vendor/autoload.php';
 require './helpers.php';
 
 // Import Router class
-require basePath('Framework/Router.php');
+// require basePath('Framework/Router.php');
 
 // Database connection
-require basePath('Framework/Database.php');
+// require basePath('Framework/Database.php');
+
+use Framework\Database;
+use Framework\Router;
 
 // Create instance of router 
 $router = new Router();
