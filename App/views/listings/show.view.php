@@ -1,6 +1,6 @@
-<?php require basePath('views/partials/head.php'); ?>
-<?php require basePath('views/partials/navbar.php'); ?>
-<?php require basePath('views/partials/top-banner.php'); ?>
+<?php require basePath('App/views/partials/head.php'); ?>
+<?php require basePath('App/views/partials/navbar.php'); ?>
+<?php require basePath('App/views/partials/top-banner.php'); ?>
 
 <section class="container mx-auto p-4 mt-4">
     <div class="rounded-lg shadow-md bg-white p-3">
@@ -59,7 +59,7 @@
     </a>
 </section>
 
-<?php require basePath('views/partials/bottom-banner.php'); ?>
+<?php require basePath('App/views/partials/bottom-banner.php'); ?>
 
 
-<?php require basePath('views/partials/footer.php'); ?>
+<?php require basePath('App/views/partials/footer.php'); ?>

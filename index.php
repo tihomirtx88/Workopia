@@ -2,10 +2,10 @@
 require './helpers.php';
 
 // Import Router class
-require basePath('Router.php');
+require basePath('Framework/Router.php');
 
 // Database connection
-require basePath('Database.php');
+require basePath('Framework/Database.php');
 
 // Create instance of router 
 $router = new Router();
