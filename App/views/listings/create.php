@@ -1,6 +1,6 @@
-<?php require basePath('views/partials/head.php'); ?>
-<?php require basePath('views/partials/navbar.php'); ?>
-<?php require basePath('views/partials/top-banner.php'); ?>
+<?php require basePath('App/views/partials/head.php'); ?>
+<?php require basePath('App/views/partials/navbar.php'); ?>
+<?php require basePath('App/views/partials/top-banner.php'); ?>
 
 <!-- Post a Job Form Box -->
 <section class="flex justify-center items-center mt-20">
@@ -61,5 +61,5 @@
 </section>
 
 
-<?php require basePath('views/partials/bottom-banner.php'); ?>
-<?php require basePath('views/partials/footer.php'); ?>
+<?php require basePath('App/views/partials/bottom-banner.php'); ?>
+<?php require basePath('App/views/partials/footer.php'); ?>
