@@ -1,6 +1,8 @@
 <?php
 namespace Framework;
 
+use App\Controllers\ErrorController;
+
 class Router
 {
     protected $routes = [];
@@ -72,12 +74,12 @@ class Router
      * @param  int $httpCode
      * @return void
      */
-    public function error($httpCode = 404){
+    // public function error($httpCode = 404){
        
-        html_entity_decode($httpCode);
-        require basePath("/views/error/{$httpCode}.php");
-        exit;
-    }
+    //     html_entity_decode($httpCode);
+    //     require basePath("/views/error/{$httpCode}.php");
+    //     exit;
+    // }
 
       /**
      * Route request
@@ -102,6 +104,7 @@ class Router
            }
         }
         
-        $this->error();
+        // $this->error();
+        ErrorController::notFound();
      }
 }
