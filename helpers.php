@@ -111,3 +111,16 @@ function formatSalary($salary){
   function sanizite($dirty){
      return filter_var(trim($dirty), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
   }
+
+  /**
+   * Redirect to a given url
+   * 
+   * @param string $url
+   * 
+   * @return void
+   */
+
+   function redirect($url){
+      header("Location: {$url}");
+      exit;
+   }
