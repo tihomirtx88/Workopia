@@ -9,5 +9,8 @@
 $router->get('/Workopia/', 'HomeController@index');
 $router->get('/Workopia/listings', 'ListingController@index');
 $router->get('/Workopia/create', 'ListingController@create');
+
 $router->get('/Workopia/listing', 'ListingController@show');
+$router->delete('/Workopia/listing', 'ListingController@destroy');
+
 $router->post('/Workopia/listings', 'ListingController@store');

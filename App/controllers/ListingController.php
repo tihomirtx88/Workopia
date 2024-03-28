@@ -28,46 +28,32 @@ class ListingController
         require basePath('App/views/listings/create.view.php');
     }
 
-    public function show()
-    {
-        $id = $_GET['id'] ?? '';
-
-        $params = [
-            'id' => $id,
-        ];
-
-        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
-
-        loadView('listings/show', [
-            'listing' => $listing
-        ]);
-    }
-
     /**
      * Store data in database
      * 
      * @return void 
      */
 
-     public function store(){
+    public function store()
+    {
 
         $allowedFields = ['title', 'discription', 'salary', 'tags', 'company', 'address', 'city', 'state', 'phone', 'email', 'requirements', 'benefits'];
-        
+
         // Check the key on bouth arrays
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
 
         $newListingData['user_id'] = 1;
-        
+
         // Sanitized data
         $newListingData = array_map('sanizite', $newListingData);
-        
+
         // Separate required fields
         $requiredFields = ['title', 'discription', 'salary', 'email', 'city', 'state'];
 
         $errors = [];
 
-      
-        
+
+
         // Check every field 
         foreach ($requiredFields as $field) {
             if (empty($newListingData[$field]) || !Validation::string($newListingData[$field])) {
@@ -82,7 +68,7 @@ class ListingController
                 'errors' => $errors,
                 'listing' => $newListingData
             ]);
-        }else{
+        } else {
             // Submit data
             // Keys
             $fields = [];
@@ -102,18 +88,59 @@ class ListingController
                     $newListingData[$field] = null;
                 }
 
-                $values[] = ':' . $field; 
+                $values[] = ':' . $field;
             }
 
             $values = implode(', ', $values);
 
             $query = "INSERT INTO listings ({$fields}) VALUES ({$values})";
 
-      
-            
+
+
             $this->db->query($query, $newListingData);
-            
+
             redirect('/Workopia/listings');
         }
+    }
+
+    /**
+     * Delete the listing
+     * @param array $params
+     * @return void 
+     */
+
+     public function destroy(){
+        $id = $_GET['id'] ?? '';
+
+        $params = [
+            'id' => $id,
+        ];
+
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        if(!$listing){
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+
+        $this->db->query('DELETE FROM listings WHERE id = :id', $params);
+
+        redirect('/Workopia/listings');
+    
+     }
+
+     public function show()
+     {
+         $id = $_GET['id'] ?? '';
+ 
+         $params = [
+             'id' => $id,
+         ];
+ 
+         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+ 
+         loadView('listings/show', [
+             'listing' => $listing
+         ]);
      }
 };
