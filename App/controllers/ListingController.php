@@ -51,7 +51,7 @@ class ListingController
 
      public function store(){
 
-        $allowedFields = ['title', 'description', 'salary', 'tags', 'company', 'address', 'city', 'state', 'phone', 'email', 'requirements', 'benefits'];
+        $allowedFields = ['title', 'discription', 'salary', 'tags', 'company', 'address', 'city', 'state', 'phone', 'email', 'requirements', 'benefits'];
         
         // Check the key on bouth arrays
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
@@ -62,15 +62,18 @@ class ListingController
         $newListingData = array_map('sanizite', $newListingData);
         
         // Separate required fields
-        $requiredFields = ['title', 'description', 'email', 'city', 'state'];
+        $requiredFields = ['title', 'discription', 'salary', 'email', 'city', 'state'];
 
         $errors = [];
+
+      
         
         // Check every field 
         foreach ($requiredFields as $field) {
-            if (empty($newListingData[$field]) || Validation::string($newListingData[$field])) {
-                $errors[$field] = ucfirst($field) . 'is reqired!';
+            if (empty($newListingData[$field]) || !Validation::string($newListingData[$field])) {
+                $errors[$field] = ucfirst($field) . ' is required';
             }
+            // inspectAndDie(Validation::string($newListingData[$field]));
         }
 
         if (!empty($errors)) {
@@ -81,6 +84,36 @@ class ListingController
             ]);
         }else{
             // Submit data
+            // Keys
+            $fields = [];
+
+            foreach ($newListingData as $field => $value) {
+                $fields[] = $field;
+            }
+
+            $fields = implode(', ', $fields);
+
+            // Values
+            $values = [];
+
+            foreach ($newListingData as $field => $value) {
+                // Convert empty string to null
+                if ($value === '') {
+                    $newListingData[$field] = null;
+                }
+
+                $values[] = ':' . $field; 
+            }
+
+            $values = implode(', ', $values);
+
+            $query = "INSERT INTO listings ({$fields}) VALUES ({$values})";
+
+      
+            
+            $this->db->query($query, $newListingData);
+            
+            redirect('/Workopia/listings');
         }
      }
 };
