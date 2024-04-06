@@ -34,7 +34,7 @@
               </li>
               <?php endif ; ?>
             </ul>
-            <a href="/Workopia/listing?id=<?= $listing->id ?>" 
+            <a href="/Workopia/public/listing?id=<?= $listing->id ?>" 
                 class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
               Details
             </a>
@@ -42,7 +42,7 @@
         </div>
       <?php endforeach; ?>
     </div>
-    <a href="/Workopia/listings" class="block text-xl text-center">
+    <a href="/Workopia/public/listings" class="block text-xl text-center">
       <i class="fa fa-arrow-alt-circle-right"></i>
       Show All Jobs
     </a>

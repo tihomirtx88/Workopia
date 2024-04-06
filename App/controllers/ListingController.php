@@ -25,7 +25,7 @@ class ListingController
 
     public function create()
     {
-        require basePath('App/views/listings/create.view.php');
+        loadView('listings/create');
     }
 
     /**
@@ -99,7 +99,7 @@ class ListingController
 
             $this->db->query($query, $newListingData);
 
-            redirect('/Workopia/listings');
+            redirect('/Workopia/public/listings');
         }
     }
 
@@ -109,7 +109,8 @@ class ListingController
      * @return void 
      */
 
-     public function destroy(){
+    public function destroy()
+    {
         $id = $_GET['id'] ?? '';
 
         $params = [
@@ -118,7 +119,7 @@ class ListingController
 
         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
 
-        if(!$listing){
+        if (!$listing) {
             ErrorController::notFound('Listing not found');
             return;
         }
@@ -128,22 +129,113 @@ class ListingController
         // Set flash message
         $_SESSION['success_message'] = 'Listing deleted successfuly';
 
-        redirect('/Workopia/listings');
-    
-     }
+        redirect('/Workopia/public/listings');
+    }
 
-     public function show()
-     {
-         $id = $_GET['id'] ?? '';
- 
-         $params = [
-             'id' => $id,
-         ];
- 
-         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
- 
-         loadView('listings/show', [
-             'listing' => $listing
-         ]);
-     }
+    public function show()
+    {
+        $id = $_GET['id'] ?? '';
+
+        $params = [
+            'id' => $id,
+        ];
+
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        loadView('listings/show', [
+            'listing' => $listing
+        ]);
+    }
+
+    public function edit()
+    {
+        $id = $_GET['id'] ?? '';
+        // $id = $params['id'] ?? '';
+
+        $params = [
+            'id' => $id,
+        ];
+
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        loadView('listings/edit', [
+            'listing' => $listing
+        ]);
+        // Check if listing exist
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+    }
+
+    public function update()
+    {
+        $id = $_GET['id'] ?? '';
+        // $id = $params['id'] ?? '';
+
+        $params = [
+            'id' => $id,
+        ];
+
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        // Check if listing exist
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+
+        // Update fields
+        $allowedFields = ['title', 'discription', 'salary', 'tags', 'company', 'address', 'city', 'state', 'phone', 'email', 'requirements', 'benefits'];
+
+        $updateValues = [];
+
+        // Check the key on bouth arrays
+        $updateValues = array_intersect_key($_POST, array_flip($allowedFields));
+
+        // Sanitize
+        $updateValues = array_map('sanizite', $updateValues);
+
+        // Separate required fields
+        $requiredFields = ['title', 'discription', 'salary', 'email', 'city', 'state'];
+
+        $errors = [];
+
+        foreach($requiredFields as $field){
+            if (empty($updateValues[$field]) || !Validation::string($updateValues[$field])) {
+                $errors[$field] = ucfirst($field) . ' is required';
+            }
+        };
+
+    
+        if (!empty($errors)) {
+          //Reload view with errors
+          loadView('listings/edit', [
+            'errors' => $errors,
+            'listing' => $listing
+        ]);
+        exit;
+        } else {
+           $updateFields = [];
+           foreach (array_keys($updateValues) as $field) {
+            // Cross into all fields and make key value 
+             $updateFields[] = "{$field} = :{$field}";
+           }
+           
+           $updateFields = implode(', ', $updateFields);
+           
+        //    Build update query
+           $updatequery = "UPDATE listings SET $updateFields WHERE id = :id";
+
+           $updateValues["id"] = $id;
+           
+        // Run query in database
+           $this->db->query($updatequery, $updateValues);
+
+           $_SESSION['success_message'] = 'Listing Updated';
+
+           redirect('/Workopia/public/edit?id=' . $id);
+
+        }
+    }
 };
