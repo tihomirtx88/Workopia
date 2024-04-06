@@ -6,11 +6,18 @@
 // $router->get('/Workopia/create', 'controllers/create.php');
 // $router->get('/Workopia/listing', 'controllers/show.php');
 
-$router->get('/Workopia/', 'HomeController@index');
-$router->get('/Workopia/listings', 'ListingController@index');
-$router->get('/Workopia/create', 'ListingController@create');
-
-$router->get('/Workopia/listing', 'ListingController@show');
-$router->delete('/Workopia/listing', 'ListingController@destroy');
-
-$router->post('/Workopia/listings', 'ListingController@store');
+//Home page
+$router->get('/Workopia/public', 'HomeController@index');
+// All listings page
+$router->get('/Workopia/public/listings', 'ListingController@index');
+// Path to create form
+$router->get('/Workopia/public/create', 'ListingController@create');
+//details listing
+$router->get('/Workopia/public/listing', 'ListingController@show');
+// // Path to edit form
+$router->get('/Workopia/public/edit', 'ListingController@edit');
+$router->put('/Workopia/public/edit', 'ListingController@update');
+//Delete listing 
+$router->delete('/Workopia/public/listing', 'ListingController@destroy');
+// Create listing
+$router->post('/Workopia/public/listings', 'ListingController@store');
