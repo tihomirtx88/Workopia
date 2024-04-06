@@ -11,7 +11,7 @@ class UserController
 
     public function __construct()
     {
-        $config = basePath('config/db.php');
+        $config = require basePath('config/db.php');
         $this->db = new Database($config);
     }
 

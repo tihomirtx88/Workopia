@@ -1,5 +1,7 @@
 <?php require basePath('App/views/partials/head.php'); ?>
 <?php require basePath('App/views/partials/navbar.php'); ?>
+<?php require basePath('App/views/partials/showcase-search.php'); ?>
+<?php require basePath('App/views/partials/top-banner.php'); ?>
 
 <!-- Login Form Box -->
 <div class="flex justify-center items-center mt-20">
@@ -18,7 +20,7 @@
 
             <p class="mt-4 text-gray-500">
                 Don't have an account?
-                <a class="text-blue-900" href="/Workopia/public/auth/register">Register</a>
+                <a class="text-blue-900" href="/Workopia/public/register">Register</a>
             </p>
         </form>
     </div>
