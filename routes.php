@@ -21,3 +21,7 @@ $router->put('/Workopia/public/edit', 'ListingController@update');
 $router->delete('/Workopia/public/listing', 'ListingController@destroy');
 // Create listing
 $router->post('/Workopia/public/listings', 'ListingController@store');
+
+$router->get('/Workopia/public/auth/login', 'UserController@login');
+$router->get('/Workopia/public/auth/register', 'UserController@create');
+
