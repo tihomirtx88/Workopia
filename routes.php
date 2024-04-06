@@ -24,4 +24,5 @@ $router->post('/Workopia/public/listings', 'ListingController@store');
 
 $router->get('/Workopia/public/login', 'UserController@login');
 $router->get('/Workopia/public/register', 'UserController@create');
+$router->post('/Workopia/public/register', 'UserController@store');
 
