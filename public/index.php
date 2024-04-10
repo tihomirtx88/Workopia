@@ -1,7 +1,5 @@
 <?php 
-session_start();
 require __DIR__ . './../vendor/autoload.php';
-require './../helpers.php';
 
 // Import Router class
 // require basePath('Framework/Router.php');
@@ -9,8 +7,12 @@ require './../helpers.php';
 // Database connection
 // require basePath('Framework/Database.php');
 
-use Framework\Database;
 use Framework\Router;
+use Framework\Session;
+
+Session::start();
+
+require './../helpers.php';
 
 // Create instance of router 
 $router = new Router();
