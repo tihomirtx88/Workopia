@@ -83,17 +83,17 @@ class UserController
         }
         // Check email is exist 
         $params = [
-            'email'=> $email
+            'email' => $email
         ];
 
         $user = $this->db->query("SELECT * FROM users WHERE email = :email", $params)->fetch();
 
         if ($user) {
-           $errors['email'] = 'That emial already exist';
-           loadView('users/create', [
-            'errors' => $errors
-           ]);
-           exit;
+            $errors['email'] = 'That emial already exist';
+            loadView('users/create', [
+                'errors' => $errors
+            ]);
+            exit;
         }
 
         // Create user account 
@@ -109,7 +109,8 @@ class UserController
 
         // get new user id
         $userId = $this->db->conection->lastInsertId();
-
+        
+        // Set user session
         Session::set('user', [
             'id' => $userId,
             'name' => $name,
@@ -127,10 +128,77 @@ class UserController
      * @return  void
      */
 
-     public function logout(){
+    public function logout()
+    {
         Session::clearAll();
         $params = session_get_cookie_params();
         setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain']);
         redirect('/Workopia/public');
-     }
+    }
+
+    /**
+     * Authenticate user with email and password 
+     *
+     *@return void
+     */
+
+    public function auth()
+    {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $errors = [];
+
+        // Valdiations 
+        if (!Validation::email($email)) {
+            $errors['email'] = 'Please enter valid email!';
+        };
+
+        if (!Validation::string($password, 6, 50)) {
+            $errors['password'] = 'A password must be at least 6 characters!';
+        };
+
+        // Check for errors
+        if (!empty($errors)) {
+            loadView('users/login', [
+                'errors' => $errors
+            ]);
+            exit;
+        }
+
+        // Check if email exist
+        $params = [
+            'email' => $email
+        ];
+
+        $user = $this->db->query('SELECT * FROM users WHERE email = :email', $params)->fetch();
+
+        if (!$user) {
+            $errors['email'] = 'Incorect credentials';
+            loadView('users/login', [
+                'errors' => $errors
+            ]);
+            exit;
+        }
+
+        // Check if password is correct 
+        if (!password_verify($password, $user->password)) {
+            $errors['password'] = 'Incorect credentials';
+            loadView('users/login', [
+                'errors' => $errors
+            ]);
+            exit;
+        }
+
+        // Set user session
+        Session::set('user', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'city' => $user->city,
+            'state' => $user->state,
+        ]);
+
+        redirect('/Workopia/public');
+    }
 }
