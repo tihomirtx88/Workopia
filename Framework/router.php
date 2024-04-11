@@ -3,6 +3,7 @@
 namespace Framework;
 
 use App\Controllers\ErrorController;
+use Framework\Middleware\Authorize;
 
 class Router
 {
@@ -14,9 +15,10 @@ class Router
      * @param string $method
      * @param string $uri
      * @param string $action
+     * @param array $middleware
      * @return void
      */
-    public function registerRoute($method, $uri, $action)
+    public function registerRoute($method, $uri, $action, $middleware = [])
     {
         // Split the action
         list($controller, $controllerMethod) = explode('@', $action);
@@ -26,7 +28,8 @@ class Router
             'method' => $method,
             'uri' => $uri,
             'controller' => $controller,
-            'controllerMethod' => $controllerMethod
+            'controllerMethod' => $controllerMethod,
+            'middleware' => $middleware
         ];
     }
     /**
@@ -35,44 +38,48 @@ class Router
      * 
      * @return string $uri
      * @param string $controller
+     * @param array $middleware
      * @return void
      */
-    public function get($uri, $controller)
+    public function get($uri, $controller, $middleware = [])
     {
-        $this->registerRoute('GET', $uri, $controller);
+        $this->registerRoute('GET', $uri, $controller, $middleware);
     }
 
     /**
      * Add POST Route
      * @return string $uri
      * @param string $controller
+     * @param array $middleware
      * @return void
      */
-    public function post($uri, $controller)
+    public function post($uri, $controller, $middleware = [])
     {
-        $this->registerRoute('POST', $uri, $controller);
+        $this->registerRoute('POST', $uri, $controller, $middleware);
     }
 
     /**
      * Add PUT Route
      * @return string $uri
      * @param string $controller
+     * @param array $middleware
      * @return void
      */
-    public function put($uri, $controller)
+    public function put($uri, $controller, $middleware = [])
     {
-        $this->registerRoute('PUT', $uri, $controller);
+        $this->registerRoute('PUT', $uri, $controller, $middleware);
     }
 
     /**
      * Add DELETE Route
      * @return string $uri
      * @param string $controller
+     * @param array $middleware
      * @return void
      */
-    public function delete($uri, $controller)
+    public function delete($uri, $controller, $middleware = [])
     {
-        $this->registerRoute('DELETE', $uri, $controller);
+        $this->registerRoute('DELETE', $uri, $controller, $middleware);
     }
 
     /**
@@ -94,19 +101,20 @@ class Router
      * @return void
      */
 
-    public function route($uri) {
-       
+    public function route($uri)
+    {
+
         $requestMethod =  $_SERVER['REQUEST_METHOD'];
 
         //Check for method input 
-        
+
         if ($requestMethod === 'POST' && isset($_POST['_method'])) {
             // Override request method with the value of _method
             $requestMethod = strtoupper($_POST['_method']);
         }
-        
+
         foreach ($this->routes as $route) {
-           
+
             //Split current URI into segments
             $uriSegments = explode('/', trim($uri, '/'));
 
@@ -120,27 +128,31 @@ class Router
                 $params = [];
 
                 $match = true;
-               
+
 
                 for ($i = 0; $i < count($uriSegments); $i++) {
-                  
+
                     // If the uri's do not match and there is no param
                     if ($routeSegments[$i] !== $uriSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
                         $match = false;
-                       
+
                         break;
                     }
 
                     // Check for the param and add to $params array
                     if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
-                       
+
                         $params[$matches[1]] = $uriSegments[$i];
-                        
+
                         // inspect($params[$matches[1]]);
                     }
                 }
 
                 if ($match) {
+
+                    foreach ($route['middleware'] as $middleware) {
+                        (new Authorize())->handle($middleware);
+                    }
 
                     //Extract controller and controller method
                     $controller = 'App\\Controllers\\' . $route['controller'];
