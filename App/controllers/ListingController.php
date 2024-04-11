@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use Framework\Database;
+use Framework\Session;
 use Framework\Validation;
+use Framework\Authorization;
 
 class ListingController
 {
@@ -42,7 +44,7 @@ class ListingController
         // Check the key on bouth arrays
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
 
-        $newListingData['user_id'] = 1;
+        $newListingData['user_id'] = Session::get('user')['id'];
 
         // Sanitized data
         $newListingData = array_map('sanizite', $newListingData);
@@ -118,10 +120,17 @@ class ListingController
         ];
 
         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
-
+        
+        // Check if listing exist
         if (!$listing) {
             ErrorController::notFound('Listing not found');
             return;
+        }
+
+        // Authorization
+        if (!Authorization::isOwner($listing->user_id)) {
+            $_SESSION['error_message'] = 'You are not authorized to delete this listing';
+            return  redirect('/Workopia/public/listings');
         }
 
         $this->db->query('DELETE FROM listings WHERE id = :id', $params);
