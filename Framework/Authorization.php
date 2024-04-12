@@ -14,10 +14,12 @@ class Authorization{
      */
 
      public static function isOwner($resourceId){
+        
         $sessionUser = Session::get('user');
 
         if ($sessionUser !== null && isset($sessionUser['id'])) {
             $sessionUserId = (int) $sessionUser['id'];
+            $resourceId = (int) $resourceId;
             return $sessionUserId === $resourceId;
         }
 

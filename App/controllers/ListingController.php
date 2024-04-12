@@ -101,6 +101,8 @@ class ListingController
 
             $this->db->query($query, $newListingData);
 
+            Session::setFlashMessage('success_message', 'Listing created successfully');
+
             redirect('/Workopia/public/listings');
         }
     }
@@ -129,14 +131,16 @@ class ListingController
 
         // Authorization
         if (!Authorization::isOwner($listing->user_id)) {
-            $_SESSION['error_message'] = 'You are not authorized to delete this listing';
+            // $_SESSION['error_message'] = 'You are not authorized to delete this listing';
+            Session::setFlashMessage('error_message', 'You are not authorized to delete this listing');
             return  redirect('/Workopia/public/listings');
         }
 
         $this->db->query('DELETE FROM listings WHERE id = :id', $params);
 
         // Set flash message
-        $_SESSION['success_message'] = 'Listing deleted successfuly';
+        // $_SESSION['success_message'] = 'Listing deleted successfuly';
+        Session::setFlashMessage('success_message', 'Listing deleted successfully');
 
         redirect('/Workopia/public/listings');
     }
@@ -240,8 +244,9 @@ class ListingController
            
         // Run query in database
            $this->db->query($updatequery, $updateValues);
-
-           $_SESSION['success_message'] = 'Listing Updated';
+           
+           Session::setFlashMessage('success_message', 'Listing Updated');
+        //    $_SESSION['success_message'] = 'Listing Updated';
 
            redirect('/Workopia/public/edit?id=' . $id);
 
